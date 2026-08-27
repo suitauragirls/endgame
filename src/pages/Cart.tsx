@@ -3,11 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { X, Minus, Plus, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
-import { getProductImage, useProducts } from '../context/ProductContext';
 
 export const Cart: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal } = useCart();
-  const { customImages } = useProducts();
   const navigate = useNavigate();
 
   const SHIPPING_COST = cartTotal > 999 ? 0 : 99;
@@ -60,7 +58,11 @@ export const Cart: React.FC = () => {
                   <div className="w-full md:col-span-6 flex items-start gap-4">
                     <Link to={`/product/${item.product.id}`} className="w-28 md:w-32 aspect-[3/4] shrink-0 bg-[#f8f9fa] border border-gray-100/80 rounded-md overflow-hidden block group-hover:border-[#2874f0]/20 transition-colors">
                       <img 
-                        src={getProductImage(item.product, customImages, item.selectedColor)} 
+                        src={
+                          item.selectedColor && item.product.colors 
+                            ? item.product.images[item.product.colors.indexOf(item.selectedColor)] || item.product.images[0]
+                            : item.product.images[0]
+                        } 
                         alt={item.product.name} 
                         className="w-full h-full object-cover" 
                       />

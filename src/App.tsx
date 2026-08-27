@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ProductProvider } from './context/ProductContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -9,7 +9,6 @@ import { Footer } from './components/Footer';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
-import { Trending } from './pages/Trending';
 import { ProductDetail } from './pages/ProductDetail';
 import { Cart } from './pages/Cart';
 import { Checkout } from './pages/Checkout';
@@ -18,8 +17,6 @@ import { OrderConfirmation } from './pages/OrderConfirmation';
 import { Orders } from './pages/Orders';
 import { OrderDetails } from './pages/OrderDetails';
 import { Admin } from './pages/Admin';
-import { AdminLogin } from './pages/AdminLogin';
-import { CustomerAuth } from './pages/CustomerAuth';
 import { ContactUs, FAQs, ShippingReturns, SizeGuide, PrivacyPolicy, TermsOfService, AboutUs } from './pages/InfoPages';
 
 // Helper to scroll to top on route change
@@ -29,11 +26,6 @@ const ScrollToTop = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
-};
-
-const AdminGate = () => {
-  const isAuthenticated = localStorage.getItem('suit_aura_admin_session') === 'demo-authenticated';
-  return isAuthenticated ? <Admin /> : <Navigate to="/admin/login" replace />;
 };
 
 export default function App() {
@@ -49,7 +41,6 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/shop" element={<Shop />} />
-                <Route path="/trending" element={<Trending />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/wishlist" element={<Wishlist />} />
@@ -57,10 +48,7 @@ export default function App() {
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/order/:id" element={<OrderDetails />} />
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/login" element={<CustomerAuth />} />
-                <Route path="/signup" element={<CustomerAuth />} />
-                <Route path="/admin" element={<AdminGate />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/faq" element={<FAQs />} />

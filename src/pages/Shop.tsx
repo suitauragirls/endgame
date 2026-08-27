@@ -1,29 +1,20 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { CATEGORIES } from '../data';
 import { ProductCard } from '../components/ProductCard';
 import { useProducts } from '../context/ProductContext';
-import { Search, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
 
 export const Shop: React.FC = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  
   const categoryFilter = searchParams.get('category');
-  const saleFilter = searchParams.get('sale') === 'true';
-  const urlSearchQuery = searchParams.get('q') || '';
-  const [searchQuery, setSearchQuery] = useState(urlSearchQuery);
-  useEffect(() => { setSearchQuery(urlSearchQuery); }, [urlSearchQuery]);
-  const { products, categories } = useProducts();
+  const searchQuery = searchParams.get('q');
+  const { products } = useProducts();
 
   let filteredProducts = products;
   
   if (categoryFilter) {
     filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
-  }
-
-  if (saleFilter) {
-    filteredProducts = filteredProducts.filter(product => product.originalPrice && product.originalPrice > product.price);
   }
   
   if (searchQuery) {
@@ -52,7 +43,7 @@ export const Shop: React.FC = () => {
               <li>
                 <Link to="/shop" className={`text-sm font-medium ${!categoryFilter && !searchQuery ? 'text-[#2874f0] font-bold' : 'text-[#212121] hover:text-[#2874f0]'}`}>All Products</Link>
               </li>
-              {categories.map(category => (
+              {CATEGORIES.map(category => (
                 <li key={category}>
                   <Link to={`/shop?category=${category}`} className={`text-sm font-medium ${categoryFilter === category ? 'text-[#2874f0] font-bold' : 'text-[#212121] hover:text-[#2874f0]'}`}>{category}</Link>
                 </li>
@@ -63,29 +54,6 @@ export const Shop: React.FC = () => {
 
         {/* Product Grid */}
         <div className="flex-1 bg-white shadow-sm p-4">
-          {/* Search Bar */}
-          <div className="mb-6 relative">
-            <div className="relative flex items-center w-full h-12 rounded-lg border border-gray-300 bg-white overflow-hidden focus-within:border-[#2874f0] focus-within:ring-1 focus-within:ring-[#2874f0] transition-all shadow-sm">
-              <div className="pl-4 pr-2 text-gray-400">
-                <Search size={20} />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products by name, color, or feature..."
-                className="w-full h-full outline-none text-gray-700 text-sm md:text-base pr-4"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="px-4 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <X size={20} />
-                </button>
-              )}
-            </div>
-          </div>
           {searchQuery && (
             <div className="mb-4 pb-2 border-b border-gray-200">
               <h2 className="text-lg font-bold text-[#212121]">Search results for "{searchQuery}"</h2>

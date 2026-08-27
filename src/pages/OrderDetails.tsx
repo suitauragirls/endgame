@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Package, Truck, CheckCircle2, MapPin, CreditCard, AlertCircle } from 'lucide-react';
+import { ArrowLeft, MapPin, Truck, CheckCircle2, Package, CreditCard } from 'lucide-react';
 import { Order } from '../types';
-import { getProductImage, useProducts } from '../context/ProductContext';
 
 export const OrderDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
-  const { customImages } = useProducts();
 
   useEffect(() => {
-    const loadOrder = () => fetch(`/api/orders/${id}`)
+    fetch(`/api/orders/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -24,16 +22,11 @@ export const OrderDetails: React.FC = () => {
         console.error(err);
         setLoading(false);
       });
-    loadOrder();
-    const timer = window.setInterval(loadOrder, 10000);
-    return () => window.clearInterval(timer);
   }, [id]);
 
   if (loading) {
     return <div className="min-h-screen pt-32 pb-20 bg-[#FAF9F6] flex justify-center text-[12px] uppercase tracking-widest">Loading...</div>;
   }
-
-  
 
   if (!order) {
     return <div className="min-h-screen pt-32 pb-20 bg-[#FAF9F6] text-center text-red-500">Order not found</div>;
@@ -114,7 +107,11 @@ export const OrderDetails: React.FC = () => {
                 <div key={idx} className="flex gap-4 p-4 border border-[#F0EAD6]">
                   <div className="w-20 aspect-[3/4] bg-[#FAF9F6] shrink-0">
                     <img 
-                      src={getProductImage(item.product, customImages, item.selectedColor)} 
+                      src={
+                        item.selectedColor && item.product.colors 
+                          ? item.product.images[item.product.colors.indexOf(item.selectedColor)] || item.product.images[0]
+                          : item.product.images[0]
+                      } 
                       alt="" 
                       className="w-full h-full object-cover" 
                     />

@@ -6,8 +6,6 @@ import crypto from "crypto";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import fs from "fs/promises";
-import fsSync from "fs";
-import os from "os";
 
 dotenv.config();
 
@@ -27,8 +25,7 @@ function getRazorpay() {
 }
 
 // Local File-based DB for persistence
-const isProdGlobal = process.env.NODE_ENV === "production";
-const DB_FILE = isProdGlobal ? path.join(os.tmpdir(), "orders_db.json") : path.join(process.cwd(), "orders_db.json");
+const DB_FILE = path.join(process.cwd(), "orders_db.json");
 
 async function readDb() {
   try {
@@ -45,25 +42,24 @@ async function writeDb(data) {
 }
 
 async function startServer() {
-  const isProd = process.env.NODE_ENV === "production";
   const app = express();
   
   // Trust reverse proxy for custom domains (HTTPS/SSL resolution)
   app.set("trust proxy", 1);
-  const PORT = 3001;
+  const PORT = 3000;
 
   app.use(cors());
   
   // Use express.json but keep raw body for webhook verification
   app.use(express.json({ limit: "50mb",
-    verify: (req: any, res, buf) => {
+    verify: (req, res, buf) => {
       req.rawBody = buf;
     }
   }));
 
   
 // Custom Images DB for persistence
-const IMAGES_DB_FILE = isProdGlobal ? path.join(os.tmpdir(), "custom_images.json") : path.join(process.cwd(), "src", "custom_images.json");
+const IMAGES_DB_FILE = path.join(process.cwd(), "src", "custom_images.json");
 async function readImagesDb() {
   try {
     const data = await fs.readFile(IMAGES_DB_FILE, "utf-8");
@@ -92,7 +88,7 @@ async function writeImagesDb(data) {
   const getOrders = async () => {
     const db = await readDb();
     return Object.entries(db.orders)
-      .map(([id, data]: [string, any]) => ({ id, ...data }))
+      .map(([id, data]) => ({ id, ...data }))
       .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   };
 
@@ -127,7 +123,7 @@ async function writeImagesDb(data) {
         const filename = `${productId}_${colorFormatted}.png`; // Always save as .png or .jpg, we'll assume the client sends what is in data.ts, but data.ts says .png
         // Actually, our data.ts points to .png explicitly. So we'll force save as .png regardless of the mime, though browser might send jpeg. 
         // We can just write the base64 as .png and it works in browsers anyway.
-        const filepath = isProd ? path.join(os.tmpdir(), 'custom_images', filename) : path.join(process.cwd(), 'public', 'custom_images', filename);
+        const filepath = path.join(process.cwd(), 'public', 'custom_images', filename);
         
         // Ensure directory exists
         
@@ -232,7 +228,7 @@ async function writeImagesDb(data) {
       if (!secret) return res.status(200).send("Webhook ignored (no secret)");
 
       const signature = req.headers["x-razorpay-signature"];
-      const isValid = Razorpay.validateWebhookSignature((req as any).rawBody.toString(), signature as string, secret);
+      const isValid = Razorpay.validateWebhookSignature(req.rawBody.toString(), signature, secret);
       
       if (!isValid) {
         return res.status(400).send("Invalid signature");
@@ -316,12 +312,7 @@ async function writeImagesDb(data) {
   app.post("/api/orders/:id/status", async (req, res) => {
     try {
       const { orderStatus, trackingNumber } = req.body;
-      const allowedStatuses = ["Order Placed", "Payment Confirmed", "Processing", "Packed", "Shipped", "Out for Delivery", "Delivered", "Cancelled"];
-      const order = await getOrder(req.params.id);
-      if (!order) return res.status(404).json({ success: false, message: "Order not found" });
-      if (!allowedStatuses.includes(orderStatus)) return res.status(400).json({ success: false, message: "Invalid order status" });
-      if (orderStatus !== "Cancelled" && order.paymentStatus !== "Paid") return res.status(400).json({ success: false, message: "Payment must be verified before fulfilment" });
-      const updateData: any = { orderStatus };
+      const updateData = { orderStatus };
       if (trackingNumber !== undefined) updateData.trackingNumber = trackingNumber;
       
       await saveOrder(req.params.id, updateData);
@@ -333,7 +324,7 @@ async function writeImagesDb(data) {
 
 
   // Vite middleware for development
-  if (!isProd) {
+  if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -342,7 +333,6 @@ async function writeImagesDb(data) {
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });

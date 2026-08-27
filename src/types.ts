@@ -5,7 +5,7 @@ export interface Product {
   price: number;
   originalPrice?: number;
   images: string[];
-  category: string;
+  category: 'Suits' | 'Kurtis' | 'Dresses' | 'Dupattas' | 'Heels' | 'Full Combo Set';
   sizes?: ('S' | 'M' | 'L' | 'XL' | 'XXL' | '3XL' | '4XL')[];
   colors: string[];
   isNewArrival?: boolean;
@@ -20,14 +20,6 @@ export interface CartItem {
   quantity: number;
   selectedSize?: string;
   selectedColor?: string;
-}
-
-export interface Coupon {
-  id: string;
-  code: string;
-  discountPercent: number;
-  minimumOrder: number;
-  active: boolean;
 }
 
 export interface CheckoutData {

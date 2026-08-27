@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Package, ChevronRight, AlertCircle } from 'lucide-react';
 import { Order } from '../types';
-import { getProductImage, useProducts } from '../context/ProductContext';
 
 export const Orders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const { customImages } = useProducts();
 
   useEffect(() => {
-    const loadOrders = () => fetch('/api/orders')
+    // Note: In a real app with auth, you'd fetch only the logged-in user's orders
+    fetch('/api/orders')
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -22,9 +21,6 @@ export const Orders: React.FC = () => {
         console.error(err);
         setLoading(false);
       });
-    loadOrders();
-    const timer = window.setInterval(loadOrders, 10000);
-    return () => window.clearInterval(timer);
   }, []);
 
   if (loading) {
@@ -86,7 +82,11 @@ export const Orders: React.FC = () => {
                       <div key={idx} className="flex gap-4 shrink-0 w-64">
                         <div className="w-16 aspect-[3/4] bg-[#FAF9F6] border border-[#F0EAD6] shrink-0">
                           <img 
-                            src={getProductImage(item.product, customImages, item.selectedColor)} 
+                            src={
+                              item.selectedColor && item.product.colors 
+                                ? item.product.images[item.product.colors.indexOf(item.selectedColor)] || item.product.images[0]
+                                : item.product.images[0]
+                            } 
                             alt="" 
                             className="w-full h-full object-cover" 
                           />

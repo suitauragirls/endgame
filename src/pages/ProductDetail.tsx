@@ -6,8 +6,18 @@ import { Minus, Plus, ShoppingBag, Truck, ShieldCheck, Clock, Share2, Copy, Hear
 import { useProducts } from '../context/ProductContext';
 import { useWishlist } from '../context/WishlistContext';
 
-type Review = { id: number; name: string; rating: number; text: string; date: string };
 
+const nameList = ["Neha", "Pooja", "Sneha", "Riya", "Simran", "Komal", "Ayesha", "Shreya", "Nisha", "Kavya", "Muskan", "Tanya", "Sakshi", "Mehak", "Divya", "Anjali", "Kritika", "Payal", "Isha", "Radhika"];
+const lastNames = ["S.", "M.", "K.", "R.", "P.", "D.", "V.", "J.", "A.", "G.", "B."];
+
+const getReviewerNames = (productId: string | undefined) => {
+  const sum = (productId || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const idx1 = sum % nameList.length;
+  const idx2 = (sum + 7) % nameList.length;
+  const ln1 = lastNames[sum % lastNames.length];
+  const ln2 = lastNames[(sum + 3) % lastNames.length];
+  return [`${nameList[idx1]} ${ln1}`, `${nameList[idx2]} ${ln2}`];
+};
 
 export const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +41,13 @@ export const ProductDetail: React.FC = () => {
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState('');
   const [reviewerName, setReviewerName] = useState('');
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState(() => {
+    const pNames = getReviewerNames(id);
+    return [
+      { id: 1, name: pNames[0], rating: 5, text: 'Amazing quality!', date: 'Aug 12, 2026' },
+      { id: 2, name: pNames[1], rating: 4, text: 'Looks exactly like the picture.', date: 'Aug 05, 2026' }
+    ];
+  });
 
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,6 +139,12 @@ export const ProductDetail: React.FC = () => {
     reader.readAsDataURL(file);
   };
 
+  if (!product) {
+    return <div className="min-h-screen pt-32 text-center pb-20">Product not found.</div>;
+  }
+
+
+  
   React.useEffect(() => {
     if (product) {
       const colorToUse = selectedColor || product.colors?.[0];
@@ -139,10 +161,6 @@ export const ProductDetail: React.FC = () => {
       }
     }
   }, [product, customImages]);
-
-  if (!product) {
-    return <div className="min-h-screen pt-32 text-center pb-20">Product not found.</div>;
-  }
 
 
   const handleAddToCart = (buyNow = false) => {
@@ -332,6 +350,7 @@ export const ProductDetail: React.FC = () => {
                       >
                         {color}
                       </button>
+                      
                     </div>
                   ))}
                 </div>

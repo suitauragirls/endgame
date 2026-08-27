@@ -1,6 +1,6 @@
 {
-  "name": "Suit Aura Girls",
-  "description": "Premium online fashion store for Indian women's clothing.",
+  "name": "Remix Suit Aura Girls",
+  "description": "Premium online fashion store for Indian women\u0027s clothing.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

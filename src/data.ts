@@ -1,37 +1,201 @@
 import { Product } from './types';
 
-export const CATEGORIES: string[] = ['Suits', 'Kurtis', 'Anarkali', 'Dupatta Sets', 'Co-ord Sets', 'Festive Wear', 'Party Wear'];
 
-const images = [
-  'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?auto=format&fit=crop&w=900&q=85',
-  'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=900&q=85'
+
+
+
+
+
+
+export const CATEGORIES = ['Full Combo Set', 'Suits', 'Kurtis', 'Dresses', 'Dupattas', 'Heels'];
+
+// High-quality placeholder images for the premium look
+export const PRODUCTS: Product[] = [
+  {
+    id: 'p7',
+    name: '6 Pcs Full Combo Set',
+    description: 'Complete your festive and party look with this stylish Full Combo Set from Suit Aura Girls. The set features an elegant embroidered Rayon Kurti paired with a flowing Palazzo and coordinated accessories for a complete ready-to-wear look. Available in multiple attractive colours and sizes S to 4XL, this combo is designed for stylish festive, party and special-occasion wear.',
+    price: 599,
+    originalPrice: 1699,
+    images: [
+      '/custom_images/p7_light_blue.png',
+      '/custom_images/p7_baby_pink.png',
+      '/custom_images/p7_red.png',
+      '/custom_images/p7_royal_blue.png',
+      '/custom_images/p7_hot_pink.png',
+      '/custom_images/p7_black.png',
+      '/custom_images/p7_ivory.png',
+      '/custom_images/p7_orange.png',
+      '/custom_images/p7_yellow.png',
+      '/custom_images/p7_light_green.png'
+    ],
+    category: 'Full Combo Set',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'],
+    colors: ['Light Blue', 'Baby Pink', 'Red', 'Royal Blue', 'Hot Pink', 'Black', 'Ivory', 'Orange', 'Yellow', 'Light Green'],
+    features: [
+      'Premium-looking embroidered design',
+      'Comfortable Rayon fabric',
+      'Flowing Palazzo',
+      'Matching earrings',
+      'Matching handbag',
+      'Matching heels',
+      'Multiple colour options',
+      'Sizes S to 4XL',
+      'Suitable for festive, party and special occasions',
+      'Complete coordinated look'
+    ],
+    includes: [
+      'Embroidered Kurti',
+      'Palazzo',
+      'Matching Earrings',
+      'Matching Handbag',
+      'Matching Heels'
+    ],
+    isNewArrival: true,
+    inStock: true,
+  },
+  {
+    id: 'p8',
+    name: 'Premium 3D Floral Georgette Anarkali Gown',
+    description: 'Premium Georgette with Soft Inner featuring 3D Floral Embroidery with Pearls, Sequins & Crystal Work.',
+    price: 900,
+    originalPrice: 2499,
+    images: [
+      '/custom_images/p8_hot_pink.png',
+      '/custom_images/p8_royal_blue.png',
+      '/custom_images/p8_light_blue.png',
+      '/custom_images/p8_black.png',
+      '/custom_images/p8_peach.png',
+      '/custom_images/p8_wine.png',
+      '/custom_images/p8_bottle_green.png',
+      '/custom_images/p8_red.png'
+    ],
+    category: 'Suits',
+    sizes: ['M', 'L', 'XL', 'XXL', '3XL', '4XL'],
+    colors: ['Hot Pink', 'Royal Blue', 'Light Blue', 'Black', 'Peach', 'Wine', 'Bottle Green', 'Red'],
+    features: [
+      'Fabric: Premium Georgette with Soft Inner',
+      'Work: 3D Floral Embroidery with Pearls, Sequins & Crystal Work',
+      'Elegant V-neckline with pearl and crystal outlining',
+      '3D floral shoulder detailing',
+      'Jewellery-style waist dori with floral pendant and pearl tassels',
+      'Asymmetric floral trail',
+      '3-layer transparent flared sleeves',
+      'Heavy floral work toward the lower flare',
+      'Pearl and crystal drop detailing on the hem',
+      'Care: Dry Clean Only'
+    ],
+    isNewArrival: true,
+    inStock: true
+  },
+  {
+    id: 'p9',
+    name: 'Premium Casual Shirt & Jeans Set',
+    description: 'Stylish casual shirt with inner top and denim jeans, perfect for everyday wear and casual outings.',
+    price: 600,
+    originalPrice: 999,
+    images: [
+      '/custom_images/p9_beige.png',
+      '/custom_images/p9_brown.png',
+      '/custom_images/p9_royal_blue.png',
+      '/custom_images/p9_black.png',
+      '/custom_images/p9_yellow.png',
+      '/custom_images/p9_navy_blue.png'
+    ],
+    category: 'Dresses',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Beige', 'Brown', 'Royal Blue', 'Black', 'Yellow', 'Navy Blue'],
+    features: [
+      'Material: Premium Cotton Blend',
+      'Stylish casual shirt with inner top',
+      'Denim jeans included',
+      'Perfect for everyday wear and casual outings'
+    ],
+    isNewArrival: true,
+    inStock: true
+  },
+  {
+    id: 'p10',
+    name: 'Elegant Pearl Border Flared Anarkali Gown',
+    description: 'Elegant Pearl Border Flared Anarkali Gown',
+    price: 719,
+    originalPrice: 1299,
+    images: [
+      '/custom_images/p10_maroon.png',
+      '/custom_images/p10_ivory.png',
+      '/custom_images/p10_navy_blue.png',
+      '/custom_images/p10_peach.png',
+      '/custom_images/p10_red.png',
+      '/custom_images/p10_black.png',
+      '/custom_images/p10_rani_pink.png'
+    ],
+    category: 'Suits',
+    sizes: ['M', 'L', 'XL', 'XXL'],
+    colors: ['Maroon', 'Ivory', 'Navy Blue', 'Peach', 'Red', 'Black', 'Rani Pink'],
+    features: [
+      'Elegant Pearl Border Flared Anarkali Gown',
+      'Premium quality fabric',
+      'Flared design with pearl border',
+      'Perfect for festive occasions'
+    ],
+    isNewArrival: true,
+    inStock: true
+  },
+  {
+    id: 'p11',
+    name: 'Elegant Pearl Border Flared Anarkali Gown',
+    description: 'Elegant Pearl Border Flared Anarkali Gown',
+    price: 649,
+    originalPrice: 1299,
+    images: [
+      '/custom_images/p11_navy_blue.png',
+      '/custom_images/p11_yellow.png',
+      '/custom_images/p11_brown.png',
+      '/custom_images/p11_rani_pink.png',
+      '/custom_images/p11_peach.png',
+      '/custom_images/p11_black.png',
+      '/custom_images/p11_maroon.png'
+    ],
+    category: 'Suits',
+    sizes: ['M', 'L', 'XL', 'XXL'],
+    colors: ['Navy Blue', 'Yellow', 'Brown', 'Rani Pink', 'Peach', 'Black', 'Maroon'],
+    features: [
+      'Elegant Pearl Border Flared Anarkali Gown',
+      'Premium quality fabric',
+      'Flared design with pearl border',
+      'Perfect for festive occasions'
+    ],
+    isNewArrival: true,
+    inStock: true
+  },
+  {
+    id: 'p12',
+    name: 'Elegant Flared Anarkali Gown',
+    description: 'Elegant flared Anarkali gown with V-neck design, full flared sleeves and delicate pearl-style border detailing. Beautiful flowing design, perfect for festive, party and wedding wear.',
+    price: 800,
+    originalPrice: 1599,
+    images: [
+      '/custom_images/p12_pink.png',
+      '/custom_images/p12_purple.png',
+      '/custom_images/p12_red.png',
+      '/custom_images/p12_yellow.png',
+      '/custom_images/p12_rani_pink.png',
+      '/custom_images/p12_green.png',
+      '/custom_images/p12_peach.png',
+      '/custom_images/p12_maroon.png',
+      '/custom_images/p12_black.png'
+    ],
+    category: 'Suits',
+    sizes: ['M', 'L', 'XL', 'XXL'],
+    colors: ['Pink', 'Purple', 'Red', 'Yellow', 'Rani Pink', 'Green', 'Peach', 'Maroon', 'Black'],
+    features: [
+      'V-neck design',
+      'Full flared sleeves',
+      'Delicate pearl-style border detailing',
+      'Beautiful flowing design',
+      'Perfect for festive, party and wedding wear'
+    ],
+    isNewArrival: true,
+    inStock: true
+  }
 ];
-
-const catalog: Array<[string, string, number, Product['category']]> = [
-  ['Gulab Chanderi Embroidered Suit Set', 'Rani Pink', 1499, 'Suits'], ['Jaipur Block Print Cotton Suit', 'Indigo Blue', 999, 'Suits'], ['Banarasi Border Straight Suit', 'Wine', 1799, 'Suits'], ['Mogra Floral Printed Suit Set', 'Ivory', 1199, 'Suits'], ['Zari Stripe Festive Suit', 'Emerald', 1599, 'Suits'],
-  ['Chikankari Cotton Lucknowi Kurti', 'White', 799, 'Kurtis'], ['Indigo Dabu Printed Kurti', 'Indigo Blue', 699, 'Kurtis'], ['Aari Work Rayon Long Kurti', 'Maroon', 899, 'Kurtis'], ['Handblock Floral A-line Kurti', 'Mustard', 749, 'Kurtis'], ['Pearl Button Cotton Kurti', 'Rose Pink', 849, 'Kurtis'],
-  ['Chanderi Silk Zardozi Anarkali', 'Rani Pink', 2299, 'Anarkali'], ['Gota Patti Floor Length Anarkali', 'Royal Blue', 1999, 'Anarkali'], ['Mirror Work Angrakha Anarkali', 'Bottle Green', 1899, 'Anarkali'], ['Printed Kalidar Anarkali Dress', 'Peach', 1299, 'Anarkali'], ['Velvet Yoke Party Anarkali', 'Wine', 2499, 'Anarkali'],
-  ['Banarasi Tissue Dupatta Set', 'Magenta', 1199, 'Dupatta Sets'], ['Organza Phulkari Dupatta Set', 'Yellow', 999, 'Dupatta Sets'], ['Chanderi Gota Border Set', 'Peach', 1099, 'Dupatta Sets'], ['Bandhani Leheriya Dupatta Set', 'Red', 899, 'Dupatta Sets'], ['Kalamkari Cotton Dupatta Set', 'Rust', 799, 'Dupatta Sets'],
-  ['Mirror Work Ethnic Co-ord Set', 'Rose Pink', 1599, 'Co-ord Sets'], ['Linen Palazzo Kurta Co-ord', 'Sage Green', 1299, 'Co-ord Sets'], ['Printed Peplum Sharara Co-ord', 'Turquoise', 1399, 'Co-ord Sets'], ['Embroidered Cotton Co-ord', 'Black', 1499, 'Co-ord Sets'], ['Satin Draped Festive Co-ord', 'Wine', 1799, 'Co-ord Sets'],
-  ['Gota Patti Celebration Lehenga Set', 'Fuchsia', 2499, 'Festive Wear'], ['Rangoli Embroidered Sharara Set', 'Marigold', 2199, 'Festive Wear'], ['Handloom Silk Festive Set', 'Royal Blue', 2699, 'Festive Wear'], ['Sequin Dupatta Celebration Set', 'Bottle Green', 2399, 'Festive Wear'], ['Kashidaari Chikankari Set', 'Ivory', 1999, 'Festive Wear'],
-  ['Royal Velvet Sequin Party Set', 'Wine', 2499, 'Party Wear'], ['Crystal Neckline Georgette Set', 'Black', 2199, 'Party Wear'], ['Satin Cape Sharara Ensemble', 'Emerald', 2299, 'Party Wear'], ['Pearl Embellished Palazzo Set', 'Navy', 1999, 'Party Wear'], ['Draped Pre-Stitched Saree Set', 'Plum', 2799, 'Party Wear']
-];
-
-export const PRODUCTS: Product[] = catalog.map(([name, color, price, category], index) => ({
-  id: `catalog-${index + 1}`,
-  name,
-  description: `${name}, designed for modern Indian wardrobes with comfortable drape and occasion-ready detail.`,
-  price,
-  originalPrice: Math.round(price * 1.35),
-  images: [images[index % images.length]],
-  category,
-  sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-  colors: [color],
-  isNewArrival: index < 12,
-  isBestSeller: index % 3 === 0,
-  inStock: true,
-  features: ['Quality checked garment', 'Comfort-first fit', 'Prepaid delivery available']
-}));

@@ -1,44 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { getProductImage, useProducts } from '../context/ProductContext';
 import { CheckoutData } from '../types';
 import { Lock, ShieldCheck, ArrowLeft } from 'lucide-react';
 
 export const Checkout: React.FC = () => {
   const { cart, cartTotal, clearCart } = useCart();
-  const { coupons, customImages } = useProducts();
   const navigate = useNavigate();
 
   const SHIPPING_COST = cartTotal > 999 ? 0 : 99;
-  const [couponCode, setCouponCode] = useState('');
-  const [couponMessage, setCouponMessage] = useState('');
-  const [discount, setDiscount] = useState(0);
-  const TOTAL = cartTotal + SHIPPING_COST - discount;
+  const TOTAL = cartTotal + SHIPPING_COST;
 
-  const [formData, setFormData] = useState<CheckoutData>(() => {
-    const saved = localStorage.getItem('suit_aura_checkout_address');
-    if (saved) { try { return JSON.parse(saved); } catch { return { fullName: '', mobile: '', email: '', address: '', houseFlat: '', area: '', city: '', state: '', pinCode: '', addressType: 'Home' }; } }
-    return { fullName: '', mobile: '', email: '', address: '', houseFlat: '', area: '', city: '', state: '', pinCode: '', addressType: 'Home' };
+  const [formData, setFormData] = useState<CheckoutData>({
+    fullName: '',
+    mobile: '',
+    email: '',
+    address: '',
+    houseFlat: '',
+    area: '',
+    city: '',
+    state: '',
+    pinCode: '',
+    addressType: 'Home'
   });
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [pinMessage, setPinMessage] = useState('');
-  const [pinLoading, setPinLoading] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('suit_aura_checkout_address', JSON.stringify(formData));
-  }, [formData]);
-
-  const applyCoupon = () => {
-    const coupon = coupons.find(item => item.code === couponCode.trim().toUpperCase() && item.active);
-    if (!coupon) { setDiscount(0); setCouponMessage('Coupon code is not valid.'); return; }
-    if (cartTotal < coupon.minimumOrder) { setDiscount(0); setCouponMessage(`Add ₹${(coupon.minimumOrder - cartTotal).toLocaleString('en-IN')} more to use this coupon.`); return; }
-    const amount = Math.round(cartTotal * coupon.discountPercent / 100);
-    setDiscount(amount);
-    setCouponMessage(`Coupon applied. You saved ₹${amount.toLocaleString('en-IN')}.`);
-  };
 
   useEffect(() => {
     // Load Razorpay Script
@@ -53,28 +40,6 @@ export const Checkout: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handlePinChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pinCode = e.target.value.replace(/\D/g, '').slice(0, 6);
-    setFormData(previous => ({ ...previous, pinCode }));
-    setPinMessage('');
-    if (pinCode.length !== 6) return;
-    setPinLoading(true);
-    try {
-      const response = await fetch(`https://api.postalpincode.in/pincode/${pinCode}`);
-      const result = await response.json();
-      const office = result?.[0]?.PostOffice?.[0];
-      if (!office) {
-        setPinMessage('Please enter a valid Indian PIN code.');
-        setFormData(previous => ({ ...previous, city: '', state: '', area: '' }));
-      } else {
-        setFormData(previous => ({ ...previous, city: office.District, state: office.State, area: office.Name }));
-        setPinMessage(`${office.District}, ${office.State}`);
-      }
-    } catch {
-      setPinMessage('PIN lookup is unavailable. Please try again.');
-    } finally { setPinLoading(false); }
   };
 
   const handlePaymentSuccess = async (response: any, orderId: string) => {
@@ -112,10 +77,6 @@ export const Checkout: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.pinCode.length !== 6 || pinLoading || !pinMessage || pinMessage.startsWith('Please') || pinMessage.startsWith('PIN')) {
-      setError('Please enter a valid Indian PIN code and wait for the address to be verified.');
-      return;
-    }
     setLoading(true);
     setError('');
     
@@ -284,11 +245,9 @@ export const Checkout: React.FC = () => {
                 <div className="col-span-1">
                   <label className="block text-[13px] font-semibold text-[#1a1a1a] mb-1.5">PIN Code</label>
                   <input 
-                    required type="text" name="pinCode" value={formData.pinCode} onChange={handlePinChange} pattern="[0-9]{6}"
+                    required type="text" name="pinCode" value={formData.pinCode} onChange={handleChange} pattern="[0-9]{6}"
                     className="w-full border border-gray-200 rounded-md px-4 py-2.5 outline-none focus:border-[#2874f0] focus:ring-2 focus:ring-[#2874f0]/20 transition-all text-[14px]"
                   />
-                  {pinLoading && <p className="text-xs text-neutral-500 mt-1">Checking PIN...</p>}
-                  {!pinLoading && pinMessage && <p className={`text-xs mt-1 ${pinMessage.startsWith('Please') || pinMessage.startsWith('PIN') ? 'text-red-600' : 'text-green-700'}`}>{pinMessage}</p>}
                 </div>
                 <div className="col-span-1">
                   <label className="block text-[13px] font-semibold text-[#1a1a1a] mb-1.5">Address Type</label>
@@ -342,14 +301,17 @@ export const Checkout: React.FC = () => {
           <div className="w-full lg:w-[380px] shrink-0">
             <div className="bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100/50 rounded-xl p-5 md:p-8 sticky top-[130px]">
               <h2 className="text-lg md:text-xl font-bold text-[#1a1a1a] mb-6 tracking-tight border-b border-gray-100 pb-4">Price Details</h2>
-              <div className="mb-6 border-b border-gray-100 pb-5"><p className="text-sm font-semibold text-[#1a1a1a] mb-3">Have a coupon?</p><div className="flex gap-2"><input value={couponCode} onChange={event => setCouponCode(event.target.value)} placeholder="Enter code" className="min-w-0 flex-1 border border-gray-200 px-3 py-2 text-sm uppercase outline-none focus:border-[#9d3658]" /><button type="button" onClick={applyCoupon} className="px-4 py-2 bg-[#9d3658] text-white text-xs font-semibold">Apply</button></div>{couponMessage && <p className={`text-xs mt-2 ${discount ? 'text-green-700' : 'text-red-600'}`}>{couponMessage}</p>}</div>
               
               <div className="flex flex-col gap-4 mb-6 overflow-y-auto max-h-[320px] hide-scrollbar pr-2">
                 {cart.map((item, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="w-16 aspect-[3/4] bg-[#f8f9fa] border border-gray-100/80 rounded-md overflow-hidden shrink-0">
                       <img 
-                                src={getProductImage(item.product, customImages, item.selectedColor)} 
+                        src={
+                          item.selectedColor && item.product.colors 
+                            ? item.product.images[item.product.colors.indexOf(item.selectedColor)] || item.product.images[0]
+                            : item.product.images[0]
+                        } 
                         alt="" 
                         className="w-full h-full object-cover" 
                       />
